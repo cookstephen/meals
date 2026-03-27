@@ -137,6 +137,10 @@
         .switch input:checked + .slider::before {
             transform: translateX(24px);
         }
+
+        #bbqMode:checked + .slider {
+            background: linear-gradient(135deg, #ff6b35 0%, #c0392b 100%);
+        }
     </style>
 </head>
 <body>
@@ -145,7 +149,14 @@
         <div class="mode-toggle">
             <span>Student Mode</span>
             <label class="switch">
-                <input type="checkbox" id="studentMode" onchange="updateMode()">
+                <input type="checkbox" id="studentMode" onchange="updateMode('student')">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="mode-toggle">
+            <span>BBQ Mode 🔥</span>
+            <label class="switch">
+                <input type="checkbox" id="bbqMode" onchange="updateMode('bbq')">
                 <span class="slider"></span>
             </label>
         </div>
@@ -213,15 +224,52 @@
             "Omelette"
         ];
 
-        let isStudentMode = false;
+        const bbqMeals = [
+            "Burgers",
+            "BBQ Ribs",
+            "Grilled Chicken Thighs",
+            "Corn on the Cob",
+            "BBQ Sausages",
+            "Pulled Pork",
+            "Grilled Salmon",
+            "Lamb Chops",
+            "BBQ Chicken Wings",
+            "Pork Belly Slices",
+            "Halloumi & Veggie Skewers",
+            "Steak",
+            "Grilled Prawns",
+            "Hot Dogs",
+            "BBQ Spatchcock Chicken",
+            "Lamb Koftas",
+            "Smoked Brisket",
+            "Chicken Curry Kebab",
+            "Pork & Prawn Burgers",
+            "Beer Can Chicken"
+        ];
 
-        function updateMode() {
-            isStudentMode = document.getElementById('studentMode').checked;
+        let activeMode = 'normal';
+
+        function updateMode(toggled) {
+            const studentEl = document.getElementById('studentMode');
+            const bbqEl = document.getElementById('bbqMode');
+
+            if (toggled === 'student' && studentEl.checked) {
+                bbqEl.checked = false;
+                activeMode = 'student';
+            } else if (toggled === 'bbq' && bbqEl.checked) {
+                studentEl.checked = false;
+                activeMode = 'bbq';
+            } else {
+                activeMode = 'normal';
+            }
+
             document.getElementById('result').textContent = 'Press the button!';
         }
 
         function getActiveMeals() {
-            return isStudentMode ? studentMeals : meals;
+            if (activeMode === 'student') return studentMeals;
+            if (activeMode === 'bbq') return bbqMeals;
+            return meals;
         }
 
         function pickMeal() {
